@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wonder – stories and boxes made for your child</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito+Sans:wght@400;600;700&family=Lora:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--sky:#e8f3fa;--ink:#18264a;--sun:#ffbf3f;--leaf:#2a9d78;--berry:#e0476a;--paper:#fff;--mute:#5b6784;--line:#d3e0ec}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sky);color:var(--ink);font:16px/1.55 "Nunito Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:Fredoka,sans-serif;font-weight:600;margin:0;line-height:1.15}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--berry);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px clamp(16px,4vw,40px);background:var(--ink);color:#fff}
+.top b{font:600 22px Fredoka;letter-spacing:.2px}.top span{font-size:14px;color:#c5d3ea}
+.shell{display:grid;grid-template-columns:270px 1fr;gap:24px;max-width:1180px;margin:24px auto;padding:0 clamp(16px,4vw,40px)}
+.rail{display:flex;flex-direction:column;gap:14px;align-self:start;position:sticky;top:16px}
+.kid{background:var(--paper);border-radius:20px;padding:18px;display:flex;gap:14px;align-items:center}
+.av{width:54px;height:54px;border-radius:50%;background:var(--sun);display:grid;place-items:center;font:600 26px Fredoka}
+.kid small{color:var(--mute);display:block}
+nav{display:flex;flex-direction:column;gap:6px}
+nav button{border:0;background:transparent;text-align:left;padding:12px 16px;border-radius:14px;cursor:pointer;font-weight:700;color:var(--mute)}
+nav button[aria-selected=true]{background:var(--paper);color:var(--ink);box-shadow:inset 4px 0 0 var(--sun)}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--paper);border-radius:20px;padding:24px;margin-bottom:18px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-weight:700;font-size:14px;margin:0 0 5px}
+input,select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;background:#fff}
+textarea{resize:vertical;min-height:84px}
+.btn{border:0;border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer;background:var(--ink);color:#fff}
+.btn.sun{background:var(--sun);color:var(--ink)}.btn:disabled{opacity:.55;cursor:wait}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:14px;cursor:pointer}
+.chip.mem{background:#fff6dc;border-color:var(--sun);cursor:default}
+.notes{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px}
+.notes li{background:var(--sky);border-radius:12px;padding:10px 14px;font-size:15px}
+.hint{color:var(--mute);font-size:14px;margin:6px 0 0}
+.book{display:grid;grid-template-columns:1fr 1fr;background:#fffdf7;border-radius:8px 22px 22px 8px;box-shadow:0 14px 0 -8px #c9d8e6,0 18px 40px rgba(24,38,74,.15);min-height:340px;position:relative;margin:6px 0 22px}
+.book::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(#e7dcc3,#d6c8a6)}
+.page{padding:30px 34px;font-family:Lora,Georgia,serif;font-size:18px;line-height:1.75}
+.page h4{font:600 15px Fredoka;color:var(--berry);margin:0 0 8px}
+.cover{grid-column:1/-1;text-align:center;padding:60px 30px}.cover h2{font-size:clamp(26px,4vw,40px)}
+.empty{grid-column:1/-1;display:grid;place-items:center;text-align:center;color:var(--mute);padding:40px;font-family:"Nunito Sans"}
+.err{background:#fde8ed;border-left:5px solid var(--berry);border-radius:10px;padding:12px 16px;margin:0 0 14px}
+.toys{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.toy{border:2px solid var(--line);border-radius:16px;padding:14px;background:#fff;text-align:left;cursor:pointer}
+.toy[aria-pressed=true]{border-color:var(--leaf);background:#eaf7f1}.toy b{display:block}.toy em{font-style:normal;color:var(--mute);font-size:14px}
+.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--leaf);transition:width .3s}
+.sum{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}.sum.t{font:600 20px Fredoka;border:0}
+details{border:1.5px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:10px;background:#fff}summary{cursor:pointer;font-weight:700}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.rail{position:static}nav{flex-direction:row;overflow-x:auto}nav button{white-space:nowrap}.row,.book{grid-template-columns:1fr}.book::before{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="top"><b>Wonder</b><span>Demo build · no real payments</span></div>
+<div class="shell">
+ <aside class="rail">
+  <div class="kid"><div class="av" id="av">A</div><div><b id="kname">Aarav</b><small id="kmeta"></small></div></div>
+  <nav role="tablist">
+   <button role="tab" aria-selected="true" data-p="profile">Child profile</button>
+   <button role="tab" aria-selected="false" data-p="story">Story studio</button>
+   <button role="tab" aria-selected="false" data-p="box">Build a WonderBox</button>
+   <button role="tab" aria-selected="false" data-p="road">Activity ideas</button>
+  </nav>
+ </aside>
+ <main>
+  <section class="panel on" id="profile">
+   <div class="card"><h2>About your child</h2>
+    <div class="row" style="margin-top:16px">
+     <div><label for="name">Name</label><input id="name" value="Aarav"></div>
+     <div><label for="age">Age</label><select id="age"><option value="1">1 year</option><option value="3" selected>3 years</option><option value="5">5 years</option><option value="7">7–8 years</option></select></div>
+     <div><label for="lang">Home languages</label><input id="lang" value="Hindi + English"></div>
+     <div><label for="int">Favourite things</label><input id="int" value="dinosaurs, trains"></div>
+    </div>
+    <div style="margin-top:14px"><label for="mile">What's happening right now?</label>
+     <select id="mile"><option>Starting preschool</option><option>Losing a first tooth</option><option>Learning to share</option><option>First flight</option><option>A new sibling is coming</option></select></div>
+   </div>
+   <div class="card"><h2>Memory journal</h2>
+    <p class="hint">Write what you noticed today. Stories pick up the notes that match the topic.</p>
+    <textarea id="jin" placeholder="e.g. Cried at the school gate but held his dinosaur and waved."></textarea>
+    <p><button class="btn" id="jadd">Save note</button></p>
+    <ul class="notes" id="jlist"></ul>
+   </div>
+  </section>
+
+  <section class="panel" id="story">
+   <div class="card"><h2>Story studio</h2>
+    <label for="topic" style="margin-top:14px">What should the story help with?</label>
+    <input id="topic" placeholder="Type a situation, or pick one below">
+    <div class="chips" id="presets"></div>
+    <p style="margin-top:18px"><button class="btn sun" id="gen">Write the story</button></p>
+   </div>
+   <div id="err"></div>
+   <div class="book" id="book"><div class="empty">Your story will open here, three chapters long.</div></div>
+   <div id="used"></div>
+   <p><button class="btn" id="save" hidden>Save to my box</button></p>
+  </section>
+
+  <section class="panel" id="box">
+   <div class="card"><h2>Build a WonderBox</h2>
+    <label for="src" style="margin-top:14px">Printed storybook (₹499)</label>
+    <select id="src"></select>
+    <h3 style="margin:22px 0 10px;font-size:19px">Add toys</h3><div class="toys" id="toys"></div>
+    <h3 style="margin:22px 0 10px;font-size:19px">Activity deck</h3>
+    <select id="deck"><option value="0">No deck</option><option value="149">High-five goodbye cards (+₹149)</option><option value="149">Bedtime calm cards (+₹149)</option><option value="149">Nature scavenger hunt (+₹149)</option></select>
+   </div>
+   <div class="card"><h2>Order summary</h2><div id="sum" style="margin-top:12px"></div>
+    <div class="bar"><i id="ship"></i></div><p class="hint" id="shipt"></p>
+    <p><button class="btn sun" id="order">Place demo order</button></p></div>
+  </section>
+
+  <section class="panel" id="road"><div class="card"><h2>Activity ideas</h2><p class="hint">Tap an idea for steps.</p><div id="roadlist" style="margin-top:14px"></div></div></section>
+ </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const P={notes:[],stories:[],story:null,toys:new Set()};
+const TOYS=[["Dinosaur wooden puzzle",399],["Emotion flashcards",249],["Clay craft set",299],["Sensory tactile kit",349],["Wooden blocks",450]];
+const ROAD={1:[["Texture trail","Lay out 4 safe textures (silk, sponge, cardboard, foil). Let your baby touch each while you name it."],["Peek-a-boo with a scarf","Hide your face, say 'where is…?', then reveal. Repeat 5 times."]],3:[["Feelings faces","Draw 4 faces on paper plates. Ask your child to pick the one that matches their day."],["Sharing turns","Use a sand timer. Each child gets one turn, and you praise the waiting."]],5:[["Pattern hunt","Find 3 patterns at home (stripes, dots, repeats) and copy them with blocks."],["Calm-down jar","Shake glitter in water together. Breathe until it settles."]],7:[["Two-sides debate","Pick a small question ('cats or dogs?'). Each side gets 1 minute and one reason."],["Plan a mini trip","Let your child plan a 1-hour outing with a budget of ₹200."]]};
+const PRESETS=["Starting preschool","Sharing toys","Bedtime fears","A new sibling","First flight"];
+const prof=()=>({name:$('name').value.trim()||'Your child',age:$('age').value,languages:$('lang').value,interests:$('int').value,milestone:$('mile').value});
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)};
+
+function head(){const p=prof();$('kname').textContent=p.name;$('av').textContent=p.name[0].toUpperCase();$('kmeta').textContent=$('age').selectedOptions[0].text+' · '+p.milestone;road()}
+['name','age','lang','int','mile'].forEach(i=>$(i).addEventListener('input',head));
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('on',x.id===b.dataset.p));
+  if(b.dataset.p==='box')renderBox()});
+
+$('jadd').onclick=()=>{const v=$('jin').value.trim();if(!v)return toast('Write a note first');P.notes.push(v);$('jin').value='';jl();toast('Note saved')};
+function jl(){$('jlist').innerHTML=P.notes.map(n=>`<li>${esc(n)}</li>`).join('')||'<li>No notes yet.</li>'}
+
+/* Retrieval: score each note by word overlap with the topic, interests and milestone. */
+const STOP=new Set('a an the and or to of in on at is was he she it his her for with my our they them we i you'.split(' '));
+const toks=s=>new Set(s.toLowerCase().match(/[a-z\u0900-\u097f]{3,}/g)?.filter(w=>!STOP.has(w))||[]);
+function retrieve(q,k=3){const Q=toks(q);return P.notes.map(n=>({n,s:[...toks(n)].filter(w=>Q.has(w)).length})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,k).map(x=>x.n)}
+
+$('presets').innerHTML=PRESETS.map(t=>`<button class="chip" type="button">${t}</button>`).join('');
+$('presets').onclick=e=>{if(e.target.classList.contains('chip'))$('topic').value=e.target.textContent};
+
+$('gen').onclick=async()=>{
+  const p=prof(),topic=$('topic').value.trim()||p.milestone;
+  const memories=retrieve(topic+' '+p.interests+' '+p.milestone);
+  $('err').innerHTML='';$('gen').disabled=true;$('gen').textContent='Writing…';
+  $('book').innerHTML='<div class="empty">Writing a story for '+esc(p.name)+'…</div>';
+  try{
+    const r=await fetch('/.netlify/functions/story',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:p,topic,memories})});
+    const d=await r.json();if(!r.ok)throw new Error(d.error||'Request failed');
+    P.story=d;showStory(d,memories);
+  }catch(e){
+    $('book').innerHTML='<div class="empty">No story yet.</div>';
+    $('err').innerHTML=`<div class="err"><b>The story service didn't respond.</b> ${esc(e.message)}. Check that the site is deployed with Netlify Functions and that GEMINI_API_KEY is set, then try again.</div>`;
+  }
+  $('gen').disabled=false;$('gen').textContent='Write the story';
+};
+function showStory(d,mem){
+  const c=d.chapters;
+  $('book').innerHTML=`<div class="cover"><h2>${esc(d.title)}</h2><p class="hint">A story for ${esc(prof().name)}</p></div>`+
+   c.map(x=>`<div class="page"><h4>${esc(x.title)}</h4>${esc(x.text)}</div>`).join('')+
+   (d.parentTip?`<div class="page" style="font-family:'Nunito Sans';font-size:15px"><h4>For you</h4>${esc(d.parentTip)}</div>`:'');
+  $('used').innerHTML=mem.length?`<p class="hint">Memories used in this story:</p><div class="chips">${mem.map(m=>`<span class="chip mem">${esc(m)}</span>`).join('')}</div>`:'<p class="hint">No journal notes matched this topic, so none were used.</p>';
+  $('save').hidden=false;
+}
+$('save').onclick=()=>{if(P.story&&!P.stories.some(s=>s.title===P.story.title)){P.stories.push(P.story);toast('Saved to your box')}};
+
+function renderBox(){
+  $('src').innerHTML=P.stories.map(s=>`<option>${esc(s.title)}</option>`).join('')+'<option>The Little Explorer\'s Gratitude Journey</option><option>Mantra & Manners for Little Champions</option>';
+  $('toys').innerHTML=TOYS.map((t,i)=>`<button class="toy" aria-pressed="${P.toys.has(i)}" data-i="${i}"><b>${t[0]}</b><em>+₹${t[1]}</em></button>`).join('');
+  sum()}
+$('toys').onclick=e=>{const b=e.target.closest('.toy');if(!b)return;const i=+b.dataset.i;P.toys.has(i)?P.toys.delete(i):P.toys.add(i);renderBox()};
+$('deck').onchange=sum;
+function sum(){
+  const toys=[...P.toys].reduce((a,i)=>a+TOYS[i][1],0),deck=+$('deck').value,pre=499+toys+deck,ship=pre>=999?0:79;
+  $('sum').innerHTML=`<div class="sum"><span>Storybook</span><span>₹499</span></div><div class="sum"><span>Toys</span><span>₹${toys}</span></div><div class="sum"><span>Activity deck</span><span>₹${deck}</span></div><div class="sum"><span>Shipping</span><span>${ship?'₹'+ship:'Free'}</span></div><div class="sum t"><span>Total</span><span>₹${pre+ship}</span></div>`;
+  $('ship').style.width=Math.min(100,pre/999*100)+'%';
+  $('shipt').textContent=pre>=999?'You unlocked free shipping.':`Add ₹${999-pre} more for free shipping.`}
+$('order').onclick=()=>toast('Demo order placed. No payment taken.');
+
+function road(){const a=$('age').value;$('roadlist').innerHTML=ROAD[a].map(r=>`<details><summary>${r[0]}</summary><p>${r[1]}</p></details>`).join('')}
+head();jl();
+</script>
+</body>
+</html>
